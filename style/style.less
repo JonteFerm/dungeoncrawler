@@ -1,0 +1,42 @@
+/**
+ * Import base style
+ */
+
+@import "base.less";
+ 
+/**
+ * Here comes specific style for a certain test program.
+ */
+
+
+@tileSize: 32px;
+#flash{
+	width: @tileSize*24;
+	height: @tileSize*12;
+	margin:0;
+	padding:0;
+	position:relative;
+}
+
+.baddie{width:@tileSize;height:@tileSize;position:absolute;background-image:url(img/baddie.png);background-size:@tileSize*4,@tileSize;background-repeat:no-repeat;z-index:10;.transition-duration(0.2s);.transition-property(e('left,top'));
+	 &.up{background-position:-96px 0;}
+	 &.down{background-position:-64px 0px;}
+	 &.left{background-position:-32px 0;}
+	 &.right{background-position:0px 0;}
+ }
+
+ .tile, .obstacle{
+ 	width: @tileSize;
+ 	height: @tileSize;
+ 	float: left;
+ 	backgroun-repeat: no-repeat;
+ }
+
+ .t11{background-image:url(tiles/dc-dngn/floor/bog_green0.png);}
+ .t12{background-image:url(tiles/dc-dngn/floor/marble_floor1.png);}
+ .t15{background-image:url(tiles/dc-dngn/floor/floor_nerves0.png);}
+
+
+ .o13{background-image:url(tiles/dc-dngn/floor/cobble_blood1.png);}
+ .o14{background-image:url(tiles/dc-dngn/floor/floor_vines5.png);}
+ .o16{background-image:url(tiles/dc-dngn/altars/dngn_altar.png);}
