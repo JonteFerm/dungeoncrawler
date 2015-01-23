@@ -1,29 +1,67 @@
-/**
- * Import base style
- */
-
 @import "base.less";
- 
-/**
- * Here comes specific style for a certain test program.
- */
-
 
 @tileSize: 32px;
+
+body{
+	background-color: #b85;
+}
+
 #flash{
-	width: @tileSize*24;
-	height: @tileSize*12;
+	width: @tileSize*21;
+	height: @tileSize*15;
 	margin:0;
 	padding:0;
 	position:relative;
 }
 
-.baddie{width:@tileSize;height:@tileSize;position:absolute;background-image:url(img/baddie.png);background-size:@tileSize*4,@tileSize;background-repeat:no-repeat;z-index:10;.transition-duration(0.2s);.transition-property(e('left,top'));
-	 &.up{background-position:-96px 0;}
-	 &.down{background-position:-64px 0px;}
-	 &.left{background-position:-32px 0;}
-	 &.right{background-position:0px 0;}
- }
+#panel{
+	width: @tileSize*21;
+	height: @tileSize*5;
+	background-color: #000;
+	margin:0;
+	padding: 0;
+	overflow-y: scroll;
+
+	p{
+		color: #45f;
+		margin: 1em;
+		font-size: smaller;
+	}
+}
+
+
+.baddie{width:@tileSize;height:@tileSize;position:absolute;background-image:url(tiles/dc-mon/human.png);z-index:10;.transition-duration(0.2s);.transition-property(e('left,top'));}
+
+.weapon{
+	width:@tileSize;height:@tileSize;
+	z-index:12;
+	position:absolute;
+	background-repeat: no-repeat;
+	&.dagger{
+		top: 6px;
+		left: 2px;
+		background-size: @tileSize/1.5, @tileSize/1.5;
+		background-image:url(tiles/item/weapon/dagger.png);
+	}
+
+	&.club{
+		background-image:url(tiles/item/weapon/club.png);
+	}
+}
+
+.armour{
+	width:@tileSize;height:@tileSize;
+	z-index:11;
+	position:absolute;
+	background-repeat: no-repeat;
+
+	&.chainMail{
+		top: 10px;
+		left: 7px;
+		background-size: @tileSize/2, @tileSize/2;
+		background-image:url(tiles/item/armour/chain_mail3.png);
+	}
+}
 
  .tile, .obstacle{
  	width: @tileSize;
