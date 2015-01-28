@@ -3,27 +3,62 @@
 @tileSize: 32px;
 
 body{
-	background-color: #b85;
+	background-color: #64674C;
 }
 
 #flash{
 	width: @tileSize*21;
 	height: @tileSize*15;
 	margin:0;
+	margin-bottom: 1em;
 	padding:0;
 	position:relative;
+	border: 1px solid #000;
+}
+
+#buttons span{
+	background-color: #673E0F;
+	padding: 0.5em;
+	margin-top: 1em;
+	margin-right: 1em;
+	border: 3px double #000;
+}
+
+header{
+	width: @tileSize*21;
+	background-color: #000;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+footer{
+	margin-top: 0.5em;
+
+	a{
+		color: #222;
+	}
+
+	a:hover{
+		text-decoration: none;
+	}
+}
+
+#buttons span:hover{
+	background-color: darken(#673E0F, 10%);
 }
 
 #panel{
 	width: @tileSize*21;
 	height: @tileSize*5;
-	background-color: #000;
+	background-color: #3F1D0B;
 	margin:0;
+	margin-top: 1em;
 	padding: 0;
 	overflow-y: scroll;
+	border: 1px solid;
 
 	p{
-		color: #45f;
+		color: #cc0;
 		margin: 1em;
 		font-size: smaller;
 	}
@@ -35,14 +70,18 @@ body{
 	height: @tileSize;
 	position: absolute;
 	background-image: url(tiles/dc-mon/human.png);
-	z-index: 10;
+	z-index: 11;
 	.transition-duration(0.2s);
 	.transition-property(e('left,top'));
+
+	&.blood{
+		background-image: url(tiles/dc-misc/blood_red1.png) !important;
+	}
 }
 
 .weapon{
 	width:@tileSize;height:@tileSize;
-	z-index:9;
+	z-index:10;
 	position:absolute;
 	background-repeat: no-repeat;
 	&.dagger{
@@ -63,7 +102,7 @@ body{
 	position:absolute;
 	background-repeat: no-repeat;
 
-	&.chainMail{
+	&.chainmail{
 		top: 10px;
 		left: 7px;
 		background-size: @tileSize/2, @tileSize/2;
@@ -86,7 +125,13 @@ body{
 	&.devil{
 		background-image: url(tiles/dc-mon/demons/red_devil.png);
 	}
+
+	&.blood{
+		background-image: url(tiles/dc-misc/blood_red.png);
+	}
 }
+
+
 
  .tile, .obstacle{
  	width: @tileSize;
@@ -95,11 +140,11 @@ body{
  	backgroun-repeat: no-repeat;
  }
 
- .t11{background-image:url(tiles/dc-dngn/floor/bog_green0.png);}
- .t12{background-image:url(tiles/dc-dngn/floor/marble_floor1.png);}
- .t15{background-image:url(tiles/dc-dngn/floor/floor_nerves0.png);}
+ .t11{background-image:url(tiles/dc-dngn/floor/cobble_blood4.png);}
+ .t12{background-image:url(tiles/dc-dngn/floor/sandstone_floor3.png);}
+ .t15{background-image:url(tiles/dc-dngn/floor/mesh3.png);}
 
 
- .o13{background-image:url(tiles/dc-dngn/floor/cobble_blood1.png);}
- .o14{background-image:url(tiles/dc-dngn/floor/floor_vines5.png);}
- .o16{background-image:url(tiles/dc-dngn/altars/dngn_altar.png);}
+ .o13{background-image:url(tiles/dc-dngn/wall/stone_dark3.png);}
+ .o14{background-image:url(tiles/dc-dngn/wall/wall_vines5.png);}
+ .o16{background-image:url(tiles/dc-dngn/altars/dngn_altar_trog.png);}

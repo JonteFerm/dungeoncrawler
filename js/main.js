@@ -25,7 +25,7 @@ var items = [];
 
 //The player
 function Player(){
-   var sprite, pos, frozen;
+   var sprite, pos, frozen, alive, baseProtection;
 
    this.sprite = sprite || document.createElement('div'),
    this.weapon = null,
@@ -33,6 +33,8 @@ function Player(){
    this.pos = pos || {left:null,top:null};
    this.sprite.className = 'baddie';
    this.frozen = false;
+   this.alive = true;
+   this.baseProtection = 2;
    element.appendChild(this.sprite);
 }
 
@@ -64,10 +66,14 @@ Player.prototype = {
 
             this.weapon = item;
             this.sprite.appendChild(this.weapon.sprite);
+            $('<p>You picked up a '+item.name+' which adds '+item.damage+' to your damage.</p>')
+            .appendTo('#panel');
          }
          else if(item.type === 'armour'){
             this.armour = item;
             this.sprite.appendChild(this.armour.sprite);
+            $('<p>You picked up a '+item.name+' which adds '+item.protection+' to your protection.</p>')
+            .appendTo('#panel');
          }
       
       }else{
@@ -140,8 +146,8 @@ Item.prototype = {
     }
 }
 
-function Enemy(type, name, damage, protection, loot, movement){
-   var sprite, pos;
+function Enemy(type, name, damage, protection, loot, roam){
+   var sprite, pos, alive;
 
    this.sprite = sprite || document.createElement('div');
    this.type = type;
@@ -149,10 +155,12 @@ function Enemy(type, name, damage, protection, loot, movement){
    this.damage = damage || null;
    this.protection = protection || null;
    this.loot = loot || null;
-   this.movement = movement || {x: 0, y: 0};
+   this.roam = roam;
    this.pos = pos || {left:0,top:0};
+   this.alive = true;
    this.sprite.className = 'enemy'+' '+this.type;
    element.appendChild(this.sprite);
+   $('#combatRoll').attr('disabled', true);
 }
 
 Enemy.prototype = {
@@ -179,10 +187,8 @@ Enemy.prototype = {
 
 window.Game = (function(){
    var gameArea, obstacles,
-   player, baddiePos, enemies, stop = false;
-
+   player, baddiePos, enemies, stop = false, opponents;
    
-
    //Initiates the variables for the game and calls the draw-function.
    function initiate(gameAreaStart, obstaclesStart){
       gameArea = gameAreaStart;
@@ -190,17 +196,21 @@ window.Game = (function(){
       draw();
       player = new Player();
       enemies = [];
+      opponents = [];
       player.move(1, 1, 'down', gameArea, obstacles);
       
-      var dagger = new Item('weapon', 'dagger', {left:11,top:6}, 2);
+      var dagger = new Item('weapon', 'dagger', {left:11,top:7}, 2);
       var club = new Item('weapon', 'club', {left:6,top:3}, 1);
-      var armour = new Item('armour', 'chainMail', {left:2,top:2}, null, 2);
-      var ghost = new Enemy('ghost', null, 2, 1, null, {x: 2, y: 2});
-      var devil = new Enemy('devil', null, 2, 1, null, {x: 2, y: 2});
+      var armour = new Item('armour', 'chainmail', {left:2,top:2}, null, 2);
+      var ghost = new Enemy('ghost', null, 2, 1, null, true);
+      var devil = new Enemy('devil', null, 2, 1, null, true);
+      var devil2 = new Enemy('devil', null, 2, 1, null, false);
       enemies.push(ghost);
       enemies.push(devil);
-      ghost.place(8, 6, gameArea, obstacles);
+      enemies.push(devil2)
+      ghost.place(8, 7, gameArea, obstacles);
       devil.place(8, 2, gameArea, obstacles);
+      devil2.place(10,7,gameArea, obstacles);
 
 
       AI();
@@ -216,65 +226,209 @@ window.Game = (function(){
       }
    }
 
-   function fight(enemy){
-      $('<p>You have encountered a '+enemy.type+' and cannot move until one of you die.</p>')
+   function fight(enemy, index){
+      
+      $('#combatRoll').attr('disabled', false);
+      
+      $('<p>You are fighting a '+enemy.type+'. Press "combat roll" to start round.</p>')
       .appendTo('#panel');
 
-      var playerRoll = function(){
+      function playerAttack(){
+         var d20, result;
+         d20 = Math.floor((Math.random()*20)+1);
 
-      };
+         if(d20 >= 8){
+            result = 'hit';
+         }else{
+            result = 'miss';
+         }
 
-      var enemyRoll = function(){
+         $('<p>D20-roll for hit = '+d20+' which is a '+result+'</p>')
+         .appendTo('#panel');
 
-      };
+         return result;
+      }
+
+      function playerDamage(){
+         var d6, mod, total;
+         d6 = Math.floor((Math.random()*6)+1);
+
+         if(player.weapon){
+            mod = player.weapon.damage;
+         }else{
+            mod = 0;
+         }
+
+         total = d6+mod;
+
+         $('<p>D6-roll for damage = '+d6+' Mod = '+mod+' Total = '+total+'</p>')
+         .appendTo('#panel');
+
+         return total;         
+      }
+
+      function enemyAttack(){
+         var d20, result;
+         d20 = Math.floor((Math.random()*20)+1);
+
+         if(d20 >= 8){
+            result = 'hit';
+         }else{
+            result = 'miss';
+         }
+
+         $('<p>The '+enemy.type+' rolls for hit = '+d20+' which is a '+result+'</p>')
+         .appendTo('#panel');
+
+         return result; 
+      }
+
+      function enemyDamage(){
+         var d6, mod, total;
+         d6 = Math.floor((Math.random()*6)+1);
+
+         mod = enemy.damage;
+
+         total = d6+mod;
+
+         $('<p>D6-roll for damage = '+d6+' Mod = '+mod+' Total = '+total+'</p>')
+         .appendTo('#panel');
+
+         return total;   
+      }
+
+      $('#combatRoll').one('click', function(){
+         var playerHit = playerAttack(),
+         playerDamageDone;
+         
+         if(playerHit === 'hit'){
+            playerDamageDone = playerDamage();
+            $('<p>You do '+playerDamageDone+' damage. Enemy protection = '+enemy.protection+'</p>')
+            .appendTo('#panel');
+
+            if(playerDamageDone > enemy.protection){
+               $('<p>You killed the '+enemy.type+'!</p>')
+               .appendTo('#panel');
+
+               enemy.alive = false;
+            }else{
+               $('<p>The '+enemy.type+' still stands.</p>')
+            }
+         }
+
+         if(enemy.alive){
+            var enemyHit = enemyAttack(),
+            enemyDamageDone,
+            playerProtection = player.baseProtection;
+
+            if(player.armour){
+               playerProtection += player.armour.protection;
+            }
+
+            if(enemyHit === 'hit'){
+               enemyDamageDone = enemyDamage();
+               $('<p>'+enemy.type+' do '+enemyDamageDone+' damage. Your protection = '+playerProtection+'.</p>')
+               .appendTo('#panel');
+
+               if(enemyDamageDone > playerProtection){
+                  $('<p>You got killed.</p>')
+                  .appendTo('#panel');
+
+                  player.alive = false;
+               }
+            }
+         }
 
 
+         if(!enemy.alive){
+            enemy.sprite.className = 'enemy blood';
+            opponents.splice(index, 1);
+            console.log(enemies);
+         }
+
+         if(!player.alive){
+            player.sprite.className = 'baddie blood';
+            player.frozen = true;
+            enemies.push(enemy);
+            opponents.splice(index, 1);
+         }
+
+         if(enemy.alive && player.alive){
+            fight(enemy, index);
+         }else if(!enemy.alive){
+            if(opponents.length > 0){
+               fight(opponents[opponents.length-1], opponents.length-1);
+            }else{
+               stop = false;
+               player.frozen = false;
+               AI();
+
+            }
+         }
+
+      });
+
+      
+     
    }
 
    function battleCheck(){
-      var currentEnemy = null;
-      for(var i=0; i<enemies.length; i++){
-         if(enemies[i].pos.left === player.pos.left && enemies[i].pos.top === player.pos.top){
+      var currEnemy;
+      for(var i=0; i < enemies.length; i++){
+         currEnemy = enemies[i];
+         console.log(currEnemy);
+         if(currEnemy.pos.left === player.pos.left && currEnemy.pos.top === player.pos.top){
             player.frozen = true;
             stop = true;
-            currentEnemy = enemies[i];
-         }else if(enemies[i].pos.left+1 === player.pos.left && enemies[i].pos.top === player.pos.top){
+            opponents.push(currEnemy);
+            enemies.splice(i, 1);
+         }
+         if(currEnemy.pos.left+1 === player.pos.left && currEnemy.pos.top === player.pos.top){
             player.frozen = true;
             stop = true;
-            currentEnemy = enemies[i];
-         }else if(enemies[i].pos.left-1 === player.pos.left && enemies[i].pos.top === player.pos.top){
+            opponents.push(currEnemy);
+            enemies.splice(i, 1);
+         }
+         if(currEnemy.pos.left-1 === player.pos.left && currEnemy.pos.top === player.pos.top){
             player.frozen = true;
             stop = true;
-            currentEnemy = enemies[i];          
-         }else if(enemies[i].pos.top+1 === player.pos.top && enemies[i].pos.left === player.pos.left){
+            opponents.push(currEnemy);
+            enemies.splice(i, 1);   
+         }
+         if(currEnemy.pos.top+1 === player.pos.top && currEnemy.pos.left === player.pos.left){
             player.frozen = true;
             stop = true;
-            currentEnemy = enemies[i];           
-         }else if(enemies[i].pos.top-1 === player.pos.top && enemies[i].pos.left === player.pos.left){
+            opponents.push(currEnemy);
+            enemies.splice(i, 1);       
+         }
+         if(currEnemy.pos.top-1 === player.pos.top && currEnemy.pos.left === player.pos.left){
             player.frozen = true;
             stop = true;
-            currentEnemy = enemies[i];        
+            opponents.push(currEnemy);
+            enemies.splice(i, 1);   
          }
 
       }
 
-      if(currentEnemy){
-         fight(currentEnemy);
+      if(opponents.length>0){
+         $('#panel').html('');
+         fight(opponents[opponents.length-1], opponents.length-1);  
       }
-      
    }
 
    function AI(){
       battleCheck();
       for(var i=0; i<enemies.length; i++){
-         enemies[i].move(gameArea,obstacles);
+         if(enemies[i].roam){
+            enemies[i].move(gameArea,obstacles);
+         }
       }
 
       setTimeout(function(){if(!stop){requestAnimFrame(AI);}}, 1000);
       
    }
 
-   document.onkeydown = function(event){
+  window.onkeydown = function(event){
       var key;
 
       key = event.keyCode;
@@ -309,8 +463,6 @@ window.Game = (function(){
       player.pickUp();
    }); 
       
-
-
    return{
       'initiate': initiate,
       'AI': AI

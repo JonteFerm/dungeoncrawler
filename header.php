@@ -9,5 +9,5 @@
 </head>
 <body>
 <header>
-<h1>Testmiljö för JavaScript</h1>
+<img src='style/img/logo.jpg'>
 </header>
