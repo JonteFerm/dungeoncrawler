@@ -69,7 +69,7 @@ footer{
 	width: @tileSize;
 	height: @tileSize;
 	position: absolute;
-	background-image: url(tiles/dc-mon/human.png);
+	background-image: url(tiles/player/base/human_m.png);
 	z-index: 11;
 	.transition-duration(0.2s);
 	.transition-property(e('left,top'));
@@ -85,13 +85,13 @@ footer{
 	position:absolute;
 	background-repeat: no-repeat;
 	&.dagger{
-		top: 6px;
-		left: 2px;
-		background-size: @tileSize/1.5, @tileSize/1.5;
-		background-image:url(tiles/item/weapon/dagger.png);
+		background-image:url(tiles/player/hand1/dagger_slant.png);
 	}
 
 	&.club{
+		top: 1px;
+		left: 3px;
+		background-size: @tileSize/1.5, @tileSize/1.5;
 		background-image:url(tiles/item/weapon/club.png);
 	}
 }
@@ -103,10 +103,36 @@ footer{
 	background-repeat: no-repeat;
 
 	&.chainmail{
-		top: 10px;
-		left: 7px;
-		background-size: @tileSize/2, @tileSize/2;
-		background-image: url(tiles/item/armour/chain_mail3.png);
+		background-image: url(tiles/player/body/chainmail.png);
+	}
+}
+
+.helmet{
+	width:@tileSize;height:@tileSize;
+	z-index:9;
+	position:absolute;
+	background-repeat: no-repeat;
+
+	&.iron{
+		background-image: url(tiles/player/head/fhelm_gray3.png);
+	}	
+}
+
+.basic{
+	width:@tileSize;height:@tileSize;
+	z-index:9;
+	position:absolute;
+	background-repeat: no-repeat;
+	&.boots{
+		background-image: url(tiles/player/boots/middle_brown3.png);
+	}
+
+	&.shirt{
+		background-image: url(tiles/player/body/shirt_black.png);
+	}
+
+	&.pants{
+		background-image: url(tiles/player/legs/pants_short_darkbrown.png);
 	}
 }
 
@@ -126,8 +152,55 @@ footer{
 		background-image: url(tiles/dc-mon/demons/red_devil.png);
 	}
 
+	&.goblin{
+		background-image: url(tiles/dc-mon/goblin.png);
+	}
+
+	&.kobold{
+		background-image: url(tiles/dc-mon/big_kobold.png);
+	}
+
+	&.wraith{
+		background-image: url(tiles/dc-mon/undead/wraith.png);
+	}
+
+	&.gnoll{
+		background-image: url(tiles/dc-mon/gnoll.png);
+	}
+
+	&.orc{
+		background-image: url(tiles/dc-mon/orc_warrior.png);
+	}
+
+	&.ghoul{
+		background-image: url(tiles/dc-mon/undead/ghoul.png);
+	}
+
 	&.blood{
 		background-image: url(tiles/dc-misc/blood_red.png);
+	}
+}
+
+.furniture{
+	width: @tileSize;
+	height: @tileSize;
+	position: absolute;
+	z-index: 10;
+
+	&.torch{
+		background-image:url(tiles/dc-dngn/wall/torches/torch4.png);
+	}
+
+	&.altar{
+		background-image:url(tiles/dc-dngn/altars/dngn_altar_trog.png);
+	}
+
+	&.orcStatue{
+		background-image:url(tiles/dc-dngn/dngn_orcish_idol.png);
+	}
+
+	&.flame{
+		background-image:url(tiles/dc-dngn/altars/dngn_altar_makhleb_flame2.png);
 	}
 }
 
@@ -140,11 +213,19 @@ footer{
  	backgroun-repeat: no-repeat;
  }
 
- .t11{background-image:url(tiles/dc-dngn/floor/cobble_blood4.png);}
- .t12{background-image:url(tiles/dc-dngn/floor/sandstone_floor3.png);}
- .t15{background-image:url(tiles/dc-dngn/floor/mesh3.png);}
+ .t11{background-image:url(tiles/dc-dngn/floor/cobble_blood4.png);} /*Cobble floor*/
+ .t13{background-image:url(tiles/dc-dngn/floor/sandstone_floor3.png);} /*Sandstone floor*/
+ .t15{background-image:url(tiles/dc-dngn/floor/mesh3.png);}	/*Nordic looking floor with blue knots floor*/
+ .t17{background-image:url(tiles/dc-dngn/floor/tomb1.png);} /*Tombish floor*/
+ .t19{background-image:url(tiles/dc-dngn/floor/pebble_brown0.png);}
+ .t21{background-image:url(tiles/dc-dngn/floor/mesh0.png);}
 
 
- .o13{background-image:url(tiles/dc-dngn/wall/stone_dark3.png);}
- .o14{background-image:url(tiles/dc-dngn/wall/wall_vines5.png);}
- .o16{background-image:url(tiles/dc-dngn/altars/dngn_altar_trog.png);}
+ .o12{background-image:url(tiles/dc-dngn/wall/stone_dark3.png);} /*Around the map*/
+ .o14{background-image:url(tiles/dc-dngn/wall/brick_brown0.png);} /*Brown brick wall standard*/
+ .o16{background-image:url(tiles/dc-dngn/wall/brick_brown1.png);} /*Brown brick wall with cracks*/
+ .o18{background-image:url(tiles/dc-dngn/wall/brick_dark0.png);} /*Dark brick wall*/
+ .o20{background-image:url(tiles/dc-dngn/wall/brick_dark5.png);} /*Dark brick wall with bone*/
+ .o22{background-image:url(tiles/dc-dngn/gateways/dngn_enter_dis.png);} /*Entrance*/
+
+
