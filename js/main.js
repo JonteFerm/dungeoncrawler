@@ -35,7 +35,7 @@ function Player(){
    this.sprite.className = 'baddie';
    this.frozen = false;
    this.alive = true;
-   this.baseProtection = 2;
+   this.baseProtection = 3;
    element.appendChild(this.sprite);
 }
 
@@ -296,7 +296,7 @@ window.Game = (function(){
          var d20, result;
          d20 = Math.floor((Math.random()*20)+1);
 
-         if(d20 >= 8){
+         if(d20 <= 8){
             result = 'hit';
          }else{
             result = 'miss';
@@ -332,7 +332,7 @@ window.Game = (function(){
          var d20, result;
          d20 = Math.floor((Math.random()*20)+1);
 
-         if(d20 >= 8){
+         if(d20 <= 8){
             result = 'hit';
          }else{
             result = 'miss';
@@ -508,7 +508,10 @@ window.Game = (function(){
             case 83:
                player.move(0,1,'down', gameArea, obstacles);
                battleCheck();
-
+               break;
+            case 13:
+               $('#restartLevel').hide();
+               start(level2);
          }
       }
    };
@@ -518,6 +521,9 @@ window.Game = (function(){
    });
    $('#dropArmour').click(function(){
       player.drop('armour');
+   });
+   $('#dropHelmet').click(function(){
+      player.drop('helmet');
    });
    $('#pickUp').click(function(){
       player.pickUp();

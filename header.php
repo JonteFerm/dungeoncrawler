@@ -9,5 +9,5 @@
 </head>
 <body>
 <header>
-<img src='style/img/logo.jpg'>
+<img style='width: 350px;' src='style/img/logo.jpg'>
 </header>
